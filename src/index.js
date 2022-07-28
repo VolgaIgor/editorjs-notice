@@ -21,10 +21,21 @@ export default class NoticeTune {
      */
     constructor({ api, data, config, block }) {
         this.api = api;
+
         this.data = {
             style: undefined,
             caption: '',
         };
+
+        if (data && data.style) {
+            let tuneData = NoticeTune.tunes.find(tune => tune.name === data.style);
+            if (tuneData) {
+                this.data = {
+                    style: data.style,
+                    caption: data.caption || '',
+                };
+            }
+        }
 
         /**
          * Tool's initial config
@@ -34,18 +45,21 @@ export default class NoticeTune {
         };
 
         this.block = block;
+
+        this.input = make('input', [this.CSS.input, this.CSS.blockInput], {
+            type: 'text',
+            placeholder: this.config.captionPlaceholder
+        });
     }
 
     /**
-   * CSS classes
-   *
-   * @returns {object}
-   */
+     * CSS classes
+     *
+     * @returns {object}
+     */
     get CSS() {
         return {
             input: this.api.styles.input,
-            baseClass: 'ce-block__content',
-
             buttonBase: this.api.styles.settingsButton,
             buttonActive: this.api.styles.settingsButtonActive,
 
@@ -85,14 +99,29 @@ export default class NoticeTune {
         ];
     }
 
+    fillIcon() {
+        if (this.data.style) {
+            let tuneData = NoticeTune.tunes.find(tune => tune.name === this.data.style);
+
+            let iconBase64 = encodeURIComponent(tuneData.icon);
+            this.input.style.backgroundImage = `url(data:image/svg+xml,${iconBase64})`;
+        } else {
+            this.input.style.backgroundImage = '';
+        }
+    }
+
+    fillTunes() {
+        this.buttons.forEach(button => {
+            button.classList.toggle(this.CSS.buttonActive, button.dataset.tune === this.data.style);
+            this.block.holder.classList.toggle(`${this.CSS.baseTemplate}--${button.dataset.tune}`, button.dataset.tune === this.data.style);
+        });
+    }
+
     /**
      * Rendering tune wrapper
      * @returns {*}
      */
     render() {
-        /*this.api.blocks.getBlockByIndex(0).save().then((obj) => {
-            console.log(obj);
-        });*/
         const wrapper = make('div', this.CSS.tuneWrapper);
 
         this.buttons = [];
@@ -109,7 +138,6 @@ export default class NoticeTune {
             });
 
             el.dataset.tune = tune.name;
-            el.classList.toggle(this.CSS.buttonActive, this.data.style === tune.name);
 
             this.buttons.push(el);
 
@@ -120,21 +148,19 @@ export default class NoticeTune {
             wrapper.appendChild(el);
         });
 
+        this.fillTunes();
+
         return wrapper;
     }
 
     wrap(blockContent) {
         const wrapper = make('div', this.CSS.blockWrapper);
 
-        const content = make('div', [this.CSS.baseClass, this.CSS.blockContent]);
-        const input = make('input', [this.CSS.input, this.CSS.blockInput], {
-            type: 'text',
-            placeholder: this.config.captionPlaceholder
-        });
+        const content = make('div', this.CSS.blockContent);
+        this.input.value = this.data.caption;
+        this.fillIcon();
 
-        this.input = input;
-
-        content.appendChild(input);
+        content.appendChild(this.input);
 
         wrapper.appendChild(content);
         wrapper.appendChild(blockContent);
@@ -148,31 +174,64 @@ export default class NoticeTune {
      * @param {string} tuneName - clicked tune name
      */
     tuneClicked(tuneName) {
+        let oldStyle = this.data.style;
+
         if (this.data.style === tuneName) {
             this.data.style = undefined;
 
-            this.input.style.backgroundImage = '';
+            this.block.holder.classList.remove(this.CSS.baseTemplate);
         } else {
-            let newStyle = NoticeTune.tunes.find(tune => tune.name === tuneName);
-            if (newStyle) {
+            let clickTune = NoticeTune.tunes.find(tune => tune.name === tuneName);
+            if (clickTune) {
                 this.data.style = tuneName;
-                let iconBase64 = encodeURIComponent(newStyle.icon);
-                this.input.style.backgroundImage = `url(data:image/svg+xml,${iconBase64})`;
+                this.block.holder.classList.add(this.CSS.baseTemplate);
             }
         }
 
-        /*let currentIndex = this.api.blocks.getCurrentBlockIndex();
-        this.api.blocks.getBlockByIndex(currentIndex - 1);*/
+        let newStyle = this.data.style;
+        if (oldStyle !== newStyle) {
+            this.checkNeighbor(oldStyle, newStyle);
 
-        this.buttons.forEach(button => {
-            button.classList.toggle(this.CSS.buttonActive, button.dataset.tune === this.data.style);
-            this.block.holder.classList.toggle(`${this.CSS.baseTemplate}--${button.dataset.tune}`, button.dataset.tune === this.data.style);
-        });
+            this.fillIcon();
+            this.fillTunes();
+        }
+    }
+
+    checkNeighbor(oldStyle, newStyle) {
+        let currentIndex = this.api.blocks.getCurrentBlockIndex();
+
+        let aheadBlock = this.api.blocks.getBlockByIndex(currentIndex - 1);
+        let behindBlock = this.api.blocks.getBlockByIndex(currentIndex + 1);
+
+        if (oldStyle !== undefined) {
+            if (
+                (aheadBlock === undefined || !aheadBlock.holder.classList.contains(`${this.CSS.baseTemplate}--${oldStyle}`)) &&
+                (behindBlock !== undefined && behindBlock.holder.classList.contains(`${this.CSS.baseTemplate}--${oldStyle}`)) &&
+                this.input.value.length !== 0
+            ) {
+                let behindBlockInput = behindBlock.holder.querySelector(`.${this.CSS.blockInput}`);
+                if (behindBlockInput) {
+                    behindBlockInput.value = this.input.value;
+                }
+            }
+        }
+
+        if (newStyle !== undefined) {
+            if (
+                (aheadBlock === undefined || !aheadBlock.holder.classList.contains(`${this.CSS.baseTemplate}--${newStyle}`)) &&
+                (behindBlock !== undefined && behindBlock.holder.classList.contains(`${this.CSS.baseTemplate}--${newStyle}`))
+            ) {
+                let behindBlockInput = behindBlock.holder.querySelector(`.${this.CSS.blockInput}`);
+                if (behindBlockInput && behindBlockInput.value.length !== 0) {
+                    this.input.value = behindBlockInput.value;
+                }
+            }
+        }
     }
 
     save() {
-        if (!this.style) {
-            return null;
+        if (!this.data.style) {
+            return undefined;
         }
 
         this.data.caption = this.input.value;

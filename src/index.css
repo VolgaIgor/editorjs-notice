@@ -6,7 +6,13 @@
 }
 
 .notice-tune__content {
+    position: relative;
+    max-width: 650px;
+    margin: 0 auto;
     display: none;
+}
+
+.notice-tune ~ .notice-tune .notice-tune__content {
     margin-top: 1.5em;
 }
 
@@ -23,9 +29,6 @@
 }
 
 .notice-tune--info .notice-tune__wrapper {
-    /*background-image: linear-gradient(to right, #5cb6ff, #5cb6ff);
-    background-size: 10px 100%;
-    background-repeat: no-repeat;*/
     border-left: 10px solid #5cb6ff;
     padding-left: 12px;
 }
