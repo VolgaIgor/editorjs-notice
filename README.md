@@ -63,7 +63,7 @@ If style is not set, then the tune data will not be serialized into JSON.
 Also data returns in this format:
 | Field | Type     | Description        |
 | ----- | -------- | ------------------ |
-| style | `string` | (`spoiler` | `info` | `warning`) Notice style |
+| style | `string` | (`spoiler` or `info` or `warning`) Notice style |
 | caption | `string` | Notice caption |
 
 ```json
