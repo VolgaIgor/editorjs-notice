@@ -1,5 +1,5 @@
 # Notice with caption (Block Tune for Editor.js)
-Tune for Editor.js adding color Notice with caption for any block.
+Tune for Editor.js adding color notice with caption for any block.
 
 Caption field will be shown only for the first block of one type.
 
