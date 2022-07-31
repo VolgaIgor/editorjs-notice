@@ -68,7 +68,7 @@ Also data returns in this format:
 
 ```json
 {
-  // Block datas
+  // Block data
   "tunes": {
     "noticeTune": {
       "style": "spoiler",
