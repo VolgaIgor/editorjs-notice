@@ -16,10 +16,19 @@ module.exports = {
         ]
       },
       {
-        test: /\.css$/,
+        test: /\.pcss$/,
         use: [
           'style-loader',
-          'css-loader'
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: [
+                require('postcss-nested-ancestors'),
+                require('postcss-nested')
+              ]
+            }
+          }
         ]
       },
       {
@@ -37,6 +46,7 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js',
     library: 'NoticeTune',
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
+    libraryExport: 'default'
   }
 };

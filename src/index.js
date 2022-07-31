@@ -1,4 +1,4 @@
-import css from './index.css';
+import './index.pcss';
 
 import infoIcon from './svg/info.svg';
 import warningIcon from './svg/warning.svg';
@@ -17,7 +17,9 @@ export default class NoticeTune {
      * Constructor
      *
      * @param api - Editor.js API
-     * @param data — Previously saved data
+     * @param data - Previously saved data
+     * @param config - user config for Tool
+     * @param block - current block API object
      */
     constructor({ api, data, config, block }) {
         this.api = api;
@@ -99,6 +101,9 @@ export default class NoticeTune {
         ];
     }
 
+    /**
+     * Showing current style in menu
+     */
     fillIcon() {
         if (this.data.style) {
             let tuneData = NoticeTune.tunes.find(tune => tune.name === this.data.style);
@@ -110,6 +115,9 @@ export default class NoticeTune {
         }
     }
 
+    /**
+     * Showing style icon on input field
+     */
     fillTunes() {
         this.buttons.forEach(button => {
             button.classList.toggle(this.CSS.buttonActive, button.dataset.tune === this.data.style);
@@ -119,7 +127,7 @@ export default class NoticeTune {
 
     /**
      * Rendering tune wrapper
-     * @returns {*}
+     * @returns {HTMLDivElement}
      */
     render() {
         const wrapper = make('div', this.CSS.tuneWrapper);
@@ -153,6 +161,12 @@ export default class NoticeTune {
         return wrapper;
     }
 
+    /**
+     * Rendering block wrapper
+     * @param {HTMLElement} blockContent - block content
+     * 
+     * @returns {HTMLDivElement}
+     */
     wrap(blockContent) {
         const wrapper = make('div', this.CSS.blockWrapper);
 
@@ -197,6 +211,9 @@ export default class NoticeTune {
         }
     }
 
+    /**
+     * Changing captions of current and neighboring blocks when change notice style
+     */
     checkNeighbor(oldStyle, newStyle) {
         let currentIndex = this.api.blocks.getCurrentBlockIndex();
 
@@ -229,6 +246,11 @@ export default class NoticeTune {
         }
     }
 
+    /**
+     * Return tune data
+     *
+     * @returns {{style: string, caption: string} | undefined}
+     */
     save() {
         if (!this.data.style) {
             return undefined;
