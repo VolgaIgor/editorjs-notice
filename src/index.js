@@ -52,6 +52,20 @@ export default class NoticeTune {
             type: 'text',
             placeholder: this.config.captionPlaceholder
         });
+
+        if (this.data.style) {
+            let observer = new MutationObserver(() => {
+                if (this.block.holder) {
+                    this.block.holder.classList.add(this.CSS.baseTemplate);
+                    this.block.holder.classList.add(`${this.CSS.baseTemplate}--${this.data.style}`);
+                    observer.disconnect();
+                }
+            });
+
+            observer.observe(this.api.ui.nodes.redactor, {
+                childList: true
+            });
+        }
     }
 
     /**
@@ -172,6 +186,7 @@ export default class NoticeTune {
 
         const content = make('div', this.CSS.blockContent);
         this.input.value = this.data.caption;
+
         this.fillIcon();
 
         content.appendChild(this.input);
