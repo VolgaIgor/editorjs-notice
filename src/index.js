@@ -50,8 +50,10 @@ export default class NoticeTune {
 
         this.input = make('input', [this.CSS.input, this.CSS.blockInput], {
             type: 'text',
-            placeholder: this.config.captionPlaceholder
+            placeholder: this.config.captionPlaceholder,
+            value: this.data.caption
         });
+        this.fillIcon();
 
         if (this.data.style) {
             let observer = new MutationObserver(() => {
@@ -76,16 +78,14 @@ export default class NoticeTune {
     get CSS() {
         return {
             input: this.api.styles.input,
-            buttonBase: this.api.styles.settingsButton,
-            buttonActive: this.api.styles.settingsButtonActive,
+            buttonBase: this.api.styles.button,
+            buttonActive: 'active',
 
             baseTemplate: 'notice-tune',
 
             tuneWrapper: 'notice-tune__tune-wrapper',
             tuneButton: 'notice-tune__tune-button',
 
-            blockWrapper: 'notice-tune__wrapper',
-            blockContent: 'notice-tune__content',
             blockInput: 'notice-tune__input',
         };
     };
@@ -116,7 +116,7 @@ export default class NoticeTune {
     }
 
     /**
-     * Showing current style in menu
+     * Showing style icon on input field
      */
     fillIcon() {
         if (this.data.style) {
@@ -130,12 +130,11 @@ export default class NoticeTune {
     }
 
     /**
-     * Showing style icon on input field
+     * Showing current style in menu
      */
     fillTunes() {
         this.buttons.forEach(button => {
             button.classList.toggle(this.CSS.buttonActive, button.dataset.tune === this.data.style);
-            this.block.holder.classList.toggle(`${this.CSS.baseTemplate}--${button.dataset.tune}`, button.dataset.tune === this.data.style);
         });
     }
 
@@ -182,19 +181,11 @@ export default class NoticeTune {
      * @returns {HTMLDivElement}
      */
     wrap(blockContent) {
-        const wrapper = make('div', this.CSS.blockWrapper);
+        if (this.data.style) {
+            blockContent.prepend(this.input);
+        }
 
-        const content = make('div', this.CSS.blockContent);
-        this.input.value = this.data.caption;
-
-        this.fillIcon();
-
-        content.appendChild(this.input);
-
-        wrapper.appendChild(content);
-        wrapper.appendChild(blockContent);
-
-        return wrapper;
+        return blockContent;
     }
 
     /**
@@ -206,14 +197,21 @@ export default class NoticeTune {
         let oldStyle = this.data.style;
 
         if (this.data.style === tuneName) {
-            this.data.style = undefined;
-
             this.block.holder.classList.remove(this.CSS.baseTemplate);
+            this.block.holder.classList.remove(`${this.CSS.baseTemplate}--${this.data.style}`);
+
+            this.data.style = undefined;
+            this.block.holder.querySelector('.ce-block__content').removeChild(this.input); 
         } else {
             let clickTune = NoticeTune.tunes.find(tune => tune.name === tuneName);
             if (clickTune) {
                 this.data.style = tuneName;
+
                 this.block.holder.classList.add(this.CSS.baseTemplate);
+                this.block.holder.classList.add(`${this.CSS.baseTemplate}--${this.data.style}`);
+                if (!oldStyle) {
+                    this.block.holder.querySelector('.ce-block__content').prepend(this.input); 
+                }
             }
         }
 
@@ -224,6 +222,8 @@ export default class NoticeTune {
             this.fillIcon();
             this.fillTunes();
         }
+
+        console.log(this.block);
     }
 
     /**

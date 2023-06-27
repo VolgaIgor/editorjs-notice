@@ -1,38 +1,36 @@
 .notice-tune {
     &__input {
+        position: relative;
         padding-left: 45px;
         background-repeat: no-repeat;
         background-position: 15px;
         margin: 10px 0;
-    }
-
-    &__content {
-        position: relative;
-        max-width: 650px;
-        margin: 0 auto;
         display: none;
     }
 
-    & &__content {
+    & &__input {
         display: block;
     }
 
-    &~& &__content {
+    &~& {
         margin-top: 1.5em;
     }
 
+    &--info+&--info,
+    &--warning+&--warning,
+    &--spoiler+&--spoiler {
+        margin-top: 0;
+    }
 
-    &--info+&--info &__content,
-    &--warning+&--warning &__content,
-    &--spoiler+&--spoiler &__content {
+    &--info+&--info &__input,
+    &--warning+&--warning &__input,
+    &--spoiler+&--spoiler &__input {
         display: none;
     }
 
     &--info {
-        ^&__wrapper {
-            border-left: 10px solid #5cb6ff;
-            padding-left: 12px;
-        }
+        border-left: 10px solid #5cb6ff;
+        padding-left: 12px;
         
         ^&__input {
             border-color: #5cb6ff;
@@ -40,10 +38,8 @@
     }
 
     &--warning {
-        ^&__wrapper {
-            border-left: 10px solid #ffd025;
-            padding-left: 12px;
-        }
+        border-left: 10px solid #ffd025;
+        padding-left: 12px;
         
         ^&__input {
             border-color: #ffd025;
@@ -51,13 +47,32 @@
     }
 
     &--spoiler {
-        ^&__wrapper {
-            border-left: 10px solid #424242;
-            padding-left: 12px;
-        }
+        border-left: 10px solid #424242;
+        padding-left: 12px;
         
         ^&__input {
             border-color: #424242;
+        }
+    }
+
+    &__tune-wrapper {
+        display: flex;
+        gap: 6px;
+        margin: 5px 0;
+
+        & > .cdx-button {
+            flex-grow: 1;
+            padding: 6px;
+
+            &.active {
+                background: var(--color-background-icon-active);
+                color: var(--color-text-icon-active);
+            }
+
+            & svg {
+                width: 16px;
+                height: 16px;
+            }
         }
     }
 }
