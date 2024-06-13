@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/VolgaIgor/editorjs-notice"
+    "url": "git+https://github.com/VolgaIgor/editorjs-notice.git"
   },
   "scripts": {
     "build": "webpack --mode production",
@@ -34,7 +34,6 @@
     "url": "https://github.com/VolgaIgor/editorjs-notice/issues"
   },
   "homepage": "https://github.com/VolgaIgor/editorjs-notice#readme",
-  "dependencies": {},
   "author": "Igor Shuvalov «VolgaIgor»",
   "description": "Notice with caption Block Tune for Editor.js"
 }
