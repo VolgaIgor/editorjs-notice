@@ -1,9 +1,37 @@
-# Notice with caption (Block Tune for Editor.js)
+# Notice with caption Block Tune for Editor.js
 Tune for Editor.js adding color notice with caption for any block.
 
 Caption field will be shown only for the first block of one type.
 
 ![Preview image](https://github.com/VolgaIgor/editorjs-notice/raw/main/assets/preview.png)
+
+## Installation
+### Install via NPM
+Get the package
+
+```shell
+$ npm i editorjs-notice
+```
+
+Include module at your application
+
+```javascript
+import NoticeTune from 'editorjs-notice';
+```
+
+### Load from CDN
+
+You can load a specific version of the package from jsDelivr CDN.
+
+Require this script on a page with Editor.js.
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/editorjs-notice"></script>
+```
+
+### Download to your project's source dir
+1. Upload folder `dist` from repository
+2. Add `dist/bundle.js` file to your page.
 
 ## Usage
 ### For all blocks
@@ -36,12 +64,7 @@ var editor = EditorJS({
 ```
 
 ## Config Params
-You can change notice caption placeholder
-| Field | Type     | Description        |
-| ----- | -------- | ------------------ |
-| captionPlaceholder | `string` | (default: `Notice caption`) Placeholder for Caption input |
-
-Or you can add a localized string into notice caption placeholder
+You can add a localized string into notice caption placeholder
 ```javascript
 new Editorjs({
   // ...

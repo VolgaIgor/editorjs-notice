@@ -43,7 +43,7 @@ export default class NoticeTune {
          * Tool's initial config
          */
         this.config = {
-            captionPlaceholder: this.api.i18n.t(config.captionPlaceholder || 'Notice caption'),
+            captionPlaceholder: this.api.i18n.t('Notice caption'),
         };
 
         this.block = block;
@@ -82,10 +82,7 @@ export default class NoticeTune {
             buttonActive: 'active',
 
             baseTemplate: 'notice-tune',
-
             tuneWrapper: 'notice-tune__tune-wrapper',
-            tuneButton: 'notice-tune__tune-button',
-
             blockInput: 'notice-tune__input',
         };
     };
@@ -149,7 +146,7 @@ export default class NoticeTune {
 
         NoticeTune.tunes.forEach(tune => {
             const title = this.api.i18n.t(tune.title);
-            const el = make('div', [this.CSS.buttonBase, this.CSS.tuneButton], {
+            const el = make('div', [this.CSS.buttonBase], {
                 innerHTML: tune.icon,
                 title,
             });
@@ -197,16 +194,18 @@ export default class NoticeTune {
         let oldStyle = this.data.style;
 
         if (this.data.style === tuneName) {
-            this.block.holder.classList.remove(this.CSS.baseTemplate);
-            this.block.holder.classList.remove(`${this.CSS.baseTemplate}--${this.data.style}`);
-
             this.data.style = undefined;
+
+            this.block.holder.classList.remove(this.CSS.baseTemplate);
+            this.block.holder.classList.remove(`${this.CSS.baseTemplate}--${oldStyle}`);
+
             this.block.holder.querySelector('.ce-block__content').removeChild(this.input); 
         } else {
             let clickTune = NoticeTune.tunes.find(tune => tune.name === tuneName);
             if (clickTune) {
                 this.data.style = tuneName;
 
+                this.block.holder.classList.remove(`${this.CSS.baseTemplate}--${oldStyle}`);
                 this.block.holder.classList.add(this.CSS.baseTemplate);
                 this.block.holder.classList.add(`${this.CSS.baseTemplate}--${this.data.style}`);
                 if (!oldStyle) {
