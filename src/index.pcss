@@ -1,4 +1,6 @@
 .notice-tune {
+    background: linear-gradient(90deg, var(--nt-border-bg) 0px, var(--nt-border-bg) 6px, transparent 6px);
+    
     &__input {
         position: relative;
         padding-left: 45px;
@@ -6,6 +8,7 @@
         background-position: 15px;
         margin: 10px 0;
         display: none;
+        border-color: var(--nt-border-bg);
     }
 
     & &__input {
@@ -29,30 +32,15 @@
     }
 
     &--info {
-        border-left: 10px solid #5cb6ff;
-        padding-left: 12px;
-        
-        ^&__input {
-            border-color: #5cb6ff;
-        }
+        --nt-border-bg: #5cb6ff;
     }
 
     &--warning {
-        border-left: 10px solid #ffd025;
-        padding-left: 12px;
-        
-        ^&__input {
-            border-color: #ffd025;
-        }
+        --nt-border-bg: #ffd025;
     }
 
     &--spoiler {
-        border-left: 10px solid #424242;
-        padding-left: 12px;
-        
-        ^&__input {
-            border-color: #424242;
-        }
+        --nt-border-bg: #424242;
     }
 
     &__tune-wrapper {

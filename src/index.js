@@ -64,8 +64,9 @@ export default class NoticeTune {
                 }
             });
 
-            observer.observe(this.api.ui.nodes.redactor, {
-                childList: true
+            observer.observe(document, {
+                childList: true,
+                subtree: true
             });
         }
     }
@@ -221,8 +222,6 @@ export default class NoticeTune {
             this.fillIcon();
             this.fillTunes();
         }
-
-        console.log(this.block);
     }
 
     /**
